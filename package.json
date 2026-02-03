@@ -1,0 +1,38 @@
+{
+  "name": "tentacle-neuron",
+  "version": "0.1.0",
+  "description": "Tentacle Neuron - Distributed AI Agent Worker Node",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "tentacle-neuron": "./bin/tentacle-neuron.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "distributed",
+    "claude",
+    "aider",
+    "tentacle"
+  ],
+  "author": "Tentacle Network",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tentacle-network/tentacle-neuron.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
