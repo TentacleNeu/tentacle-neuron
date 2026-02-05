@@ -11,7 +11,7 @@ token: "your-email@example.com"
 agent:
   type: "claude" # Supported: claude, aider, openai
   command: "claude" # Command to invoke the agent
-  args: "--dangerously-skip-permissions" # Additional arguments
+  args: "" # Additional arguments (avoid --dangerously-skip-permissions unless allow_dangerous=true)
   timeout: 300 # Max execution time per task (seconds)
   model_tier: "medium" # Model tier: high / medium / low
   # model: "gpt-4-turbo" # For openai type: specify model (default: gpt-4)
@@ -27,9 +27,15 @@ skills:
 settings:
   server_url: "http://localhost:3000" # Brain server URL
   poll_interval: 5000 # Polling interval in ms
+  poll_backoff_max_ms: 30000 # Max backoff for empty/error polls
+  register_backoff_max_ms: 30000 # Max backoff for registration retry
+  stats_interval_ms: 60000 # Stats log interval (0 to disable)
   max_concurrent: 3 # Max concurrent tasks
   log_level: "info"
   accept_lower_tier: true # Accept tasks below this neuron's tier
+  allow_dangerous: false # Allow --dangerously-skip-permissions
+  default_work_dir: "" # Optional default work directory for tasks
+  submit_meta: false # Send structured meta with task results
 
 
   # Windows only: Path to Git Bash (required for Claude CLI)

@@ -1,6 +1,6 @@
-# Tentacle Neuron 🐙
+# Tentacle Neuron
 
-Distributed AI Agent Worker Node for the Tentacle Network.
+Distributed AI agent worker node for the Tentacle Network.
 
 ## What is Tentacle Neuron?
 
@@ -21,11 +21,14 @@ Create a `config.yaml` file:
 ```yaml
 wallet: "YOUR_WALLET_ADDRESS"
 
+token: "your-email@example.com"
+
 agent:
   type: "claude"
   command: "claude"
-  args: "--dangerously-skip-permissions"
+  args: "" # Avoid --dangerously-skip-permissions unless allow_dangerous=true
   timeout: 300
+  model_tier: "medium"
 
 skills:
   - content_research
@@ -34,12 +37,25 @@ skills:
 settings:
   server_url: "https://api.tentacle.network"
   poll_interval: 5000
+  poll_backoff_max_ms: 30000
+  register_backoff_max_ms: 30000
+  stats_interval_ms: 60000
+  max_concurrent: 1
+  allow_dangerous: false
+  default_work_dir: ""
+  submit_meta: false
 ```
 
 ### Start
 
 ```bash
 tentacle-neuron start
+```
+
+### Health Check
+
+```bash
+tentacle-neuron doctor
 ```
 
 ## Supported Agents
@@ -74,10 +90,18 @@ docker run -d \
 
 ## How It Works
 
-1. **Register**: Neuron connects to Brain and registers its capabilities
-2. **Poll**: Continuously polls for available tasks
-3. **Execute**: Runs tasks using your local AI agent
-4. **Submit**: Returns results and earns ATP
+1. Register: Neuron connects to Brain and registers its capabilities
+2. Poll: Continuously polls for available tasks
+3. Execute: Runs tasks using your local AI agent
+4. Submit: Returns results and earns ATP
+
+## Task Protocol (MVP)
+
+See `docs/task-protocol.md` for the minimal task schema (including `workDir`) and result submission format.
+
+## Optional Plugin
+
+See `neuron-assistant-plugin/README.md` for a minimal Claude Code plugin skeleton that helps task authors generate payloads.
 
 ## Skills
 

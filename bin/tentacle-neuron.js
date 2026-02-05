@@ -2,28 +2,29 @@
 
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { existsSync } from 'fs';
-import { spawn } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const mainScript = join(__dirname, '..', 'src', 'index.js');
+const doctorScript = join(__dirname, '..', 'src', 'doctor.js');
 
-// 简单的 CLI 入口
 const args = process.argv.slice(2);
 const command = args[0];
 
 switch (command) {
   case 'start':
   case undefined:
-    // 启动 neuron
     import(mainScript);
     break;
 
   case 'init':
-    console.log('🐙 Tentacle Neuron Setup');
-    console.log('========================\n');
-    console.log('Please create a config.yaml file with your settings.');
-    console.log('See config.example.yaml for reference.\n');
+    console.log('Tentacle Neuron Setup');
+    console.log('=====================');
+    console.log('Create a config.yaml file with your settings.');
+    console.log('See config.example.yaml for reference.');
+    break;
+
+  case 'doctor':
+    import(doctorScript);
     break;
 
   case 'version':
@@ -37,7 +38,7 @@ switch (command) {
   case '-h':
   case '--help':
     console.log(`
-🐙 Tentacle Neuron - Distributed AI Agent Worker
+Tentacle Neuron - Distributed AI Agent Worker
 
 Usage:
   tentacle-neuron [command]
@@ -45,12 +46,13 @@ Usage:
 Commands:
   start       Start the neuron (default)
   init        Initialize configuration
+  doctor      Run health checks
   version     Show version
   help        Show this help
 
 Examples:
   tentacle-neuron start
-  tentacle-neuron init
+  tentacle-neuron doctor
 `);
     break;
 

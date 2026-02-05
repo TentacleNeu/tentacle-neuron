@@ -1,0 +1,8 @@
+{
+  "name": "neuron-assistant",
+  "version": "0.1.0",
+  "description": "Helper commands for Tentacle Neuron task authoring",
+  "author": {
+    "name": "Tentacle Network"
+  }
+}

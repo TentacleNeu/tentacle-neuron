@@ -29,6 +29,12 @@ export function loadConfig() {
       // Defaults
       if (!config.settings) config.settings = {};
       if (!config.settings.max_concurrent) config.settings.max_concurrent = 1;
+      if (!config.settings.poll_interval) config.settings.poll_interval = 5000;
+      if (!config.settings.poll_backoff_max_ms) config.settings.poll_backoff_max_ms = 30000;
+      if (!config.settings.stats_interval_ms) config.settings.stats_interval_ms = 60000;
+      if (config.settings.allow_dangerous === undefined) config.settings.allow_dangerous = false;
+      if (!config.settings.register_backoff_max_ms) config.settings.register_backoff_max_ms = 30000;
+      if (config.settings.submit_meta === undefined) config.settings.submit_meta = false;
 
       cachedConfig = config;
       return cachedConfig;
