@@ -5,7 +5,14 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// 模块级缓存（单例模式）- 避免重复加载配置
+let cachedConfig = null;
+
 export function loadConfig() {
+  if (cachedConfig) {
+    return cachedConfig;
+  }
+
   const configPaths = [
     path.join(process.cwd(), 'config.yaml'),
     path.join(process.cwd(), 'config.yml'),
@@ -18,7 +25,13 @@ export function loadConfig() {
       const content = fs.readFileSync(configPath, 'utf-8');
       const config = yaml.load(content);
       config._source = configPath;
-      return config;
+      
+      // Defaults
+      if (!config.settings) config.settings = {};
+      if (!config.settings.max_concurrent) config.settings.max_concurrent = 1;
+
+      cachedConfig = config;
+      return cachedConfig;
     }
   }
 

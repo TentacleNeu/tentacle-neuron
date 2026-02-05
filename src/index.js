@@ -27,37 +27,46 @@ async function main() {
   console.log('💤 Waiting for tasks...\n');
 
   // 3. Main Loop
-  let isWorking = false;
+  const activeTasks = new Set();
+  const maxConcurrent = config.settings?.max_concurrent || 1;
+  console.log(`🧵 Concurrency Level: ${maxConcurrent}`);
 
   setInterval(async () => {
-    if (isWorking) return;
+    // Check if we have free slots
+    if (activeTasks.size >= maxConcurrent) {
+      return; 
+    }
 
     // Poll for task
+    // Note: In a real high-concurrency scenario, you might want to fetch multiple tasks at once.
+    // For now, we fetch one by one to fill the slots.
     const pollResult = await api.pollTasks(neuronId);
 
     if (pollResult && pollResult.task) {
       const task = pollResult.task;
-      console.log(`📦 Received Task [${task.id}]: ${task.prompt.substring(0, 50)}...`);
+      const logPrefix = `[Task ${task.id.substring(0, 8)}]`;
+      console.log(`${logPrefix} 📦 Received Task: ${task.prompt.substring(0, 50)}...`);
 
-      isWorking = true;
+      // Add to active set
+      activeTasks.add(task.id);
 
-      try {
-        // Execute Task
-        console.log(`🚀 Executing task with ${config.agent.type}...`);
-        const result = await executeTask(config.agent, task);
-
-        // Submit Result
-        console.log(`📤 Submitting result for task ${task.id}...`);
-        await api.submitResult(task.id, neuronId, result.output, result.success ? null : result.error);
-
-        console.log('✅ Task completed & submitted.');
-      } catch (err) {
-        console.error('❌ Critical error executing task:', err);
-        await api.submitResult(task.id, neuronId, null, err.message);
-      } finally {
-        isWorking = false;
-        console.log('💤 Waiting for tasks...\n');
-      }
+      // Execute asynchronously (FIRE AND FORGET from the loop's perspective)
+      // We do NOT await here, so the loop can continue to fetch more tasks
+      executeTask(config.agent, task)
+        .then(async (result) => {
+          console.log(`${logPrefix} 📤 Submitting result...`);
+          await api.submitResult(task.id, neuronId, result.output, result.success ? null : result.error);
+          console.log(`${logPrefix} ✅ Task completed & submitted.`);
+        })
+        .catch(async (err) => {
+          console.error(`${logPrefix} ❌ Critical error executing task:`, err);
+          await api.submitResult(task.id, neuronId, null, err.message);
+        })
+        .finally(() => {
+          // Free up the slot
+          activeTasks.delete(task.id);
+          console.log(`💤 Slot freed. Active tasks: ${activeTasks.size}/${maxConcurrent}`);
+        });
     }
   }, config.settings.poll_interval || 5000);
 }

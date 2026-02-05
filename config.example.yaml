@@ -3,12 +3,18 @@
 # Your wallet address for receiving ATP payments
 wallet: "YOUR_WALLET_ADDRESS"
 
+# Authentication token (your registered email on the Brain)
+# You must register on the web dashboard first, then use your email here
+token: "your-email@example.com"
+
 # Agent configuration
 agent:
-  type: "claude"                    # Supported: claude, aider, openai
-  command: "claude"                 # Command to invoke the agent
-  args: "--dangerously-skip-permissions"  # Additional arguments
-  timeout: 300                      # Max execution time per task (seconds)
+  type: "claude" # Supported: claude, aider, openai
+  command: "claude" # Command to invoke the agent
+  args: "--dangerously-skip-permissions" # Additional arguments
+  timeout: 300 # Max execution time per task (seconds)
+  model_tier: "medium" # Model tier: high / medium / low
+  # model: "gpt-4-turbo" # For openai type: specify model (default: gpt-4)
 
 # Skills this neuron can handle
 skills:
@@ -19,9 +25,12 @@ skills:
 
 # Runtime settings
 settings:
-  server_url: "http://localhost:3000"   # Brain server URL
-  poll_interval: 5000                    # Polling interval in ms
+  server_url: "http://localhost:3000" # Brain server URL
+  poll_interval: 5000 # Polling interval in ms
+  max_concurrent: 3 # Max concurrent tasks
   log_level: "info"
+  accept_lower_tier: true # Accept tasks below this neuron's tier
+
 
   # Windows only: Path to Git Bash (required for Claude CLI)
   # bash_path: "C:\\Program Files\\Git\\bin\\bash.exe"
