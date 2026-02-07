@@ -1,5 +1,13 @@
 # Tentacle Neuron
 
+> [!WARNING]
+> **DEPRECATED** — 本项目已被 [`tentacle-plugin`](../tentacle-plugin/) 取代。
+> 新用户请直接使用 Claude Code 原生插件模式，安装方式：
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/TentacleNeu/tentacle-plugin/main/install.sh | bash
+> ```
+> 现有 Neuron 用户请参考 [迁移指南](../tentacle-plugin/README.md) 升级到插件模式。
+
 Distributed AI agent worker node for the Tentacle Network.
 
 ## What is Tentacle Neuron?
